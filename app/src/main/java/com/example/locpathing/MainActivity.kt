@@ -130,6 +130,17 @@ fun LocationScreen(
                     }
 
                     uiState.latitude != null -> {
+
+                        uiState.timestamp?.let {
+                            Text(
+                                text = "Atualizado às $it",
+                                fontSize = 12.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                modifier = Modifier.align(Alignment.End)
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                        }
+
                         // Coordenadas
                         InfoRow(label = "📍 Latitude", value = "%.6f".format(uiState.latitude))
                         Spacer(modifier = Modifier.height(8.dp))

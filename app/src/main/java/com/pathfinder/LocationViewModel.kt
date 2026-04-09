@@ -23,7 +23,8 @@ data class LocationUiState(
     val latitude: Double? = null,
     val longitude: Double? = null,
     val address: String? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
+    val timestamp: String? = null
 )
 
 class LocationViewModel(application: Application) : AndroidViewModel(application) {
@@ -64,10 +65,14 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
                 // Converte coordenadas em endereço via Geocoder
                 val addressText = reverseGeocode(lat, lng)
 
+                val time = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
+                    .format(java.util.Date())
+
                 _uiState.value = LocationUiState(
                     latitude = lat,
                     longitude = lng,
-                    address = addressText
+                    address = addressText,
+                    timestamp = time
                 )
 
             } catch (e: Exception) {
