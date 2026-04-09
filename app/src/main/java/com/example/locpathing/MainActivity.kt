@@ -24,6 +24,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.locpathing.ui.theme.LocPathingTheme
 import com.example.locpathing.LocationViewModel
 import com.example.locpathing.LocationUiState
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.TextButton
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +50,8 @@ fun LocationScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
+    var showPermissionDialog by remember { mutableStateOf(false) }
+
     // Launcher para solicitar permissões em runtime
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions()
@@ -56,7 +60,22 @@ fun LocationScreen(
                 permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
         if (granted) {
             viewModel.fetchLocation()
+        } else {
+            showPermissionDialog = true
         }
+    }
+
+    if (showPermissionDialog) {
+        AlertDialog(
+            onDismissRequest = { showPermissionDialog = false },
+            title = { Text("Permissão necessária") },
+            text = { Text("O acesso à localização foi negado. Ative nas configurações do dispositivo em Aplicativos > LocPathing > Permissões.") },
+            confirmButton = {
+                TextButton(onClick = { showPermissionDialog = false }) {
+                    Text("OK")
+                }
+            }
+        )
     }
 
     Column(
