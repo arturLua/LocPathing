@@ -183,7 +183,11 @@ fun LocationScreen(
             enabled = !uiState.isLoading
         ) {
             Text(
-                text = if (uiState.isLoading) "Carregando..." else "Obter Localização",
+                text = when {
+                    uiState.isLoading -> "Carregando..."
+                    uiState.latitude != null -> "Atualizar Localização"
+                    else -> "Obter Localização"
+                },
                 fontSize = 16.sp
             )
         }
