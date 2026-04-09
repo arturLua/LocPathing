@@ -26,6 +26,10 @@ import com.example.locpathing.LocationViewModel
 import com.example.locpathing.LocationUiState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TextButton
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import androidx.compose.ui.platform.LocalContext
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +68,8 @@ fun LocationScreen(
             showPermissionDialog = true
         }
     }
+
+    val context = LocalContext.current
 
     if (showPermissionDialog) {
         AlertDialog(
@@ -155,6 +161,18 @@ fun LocationScreen(
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.primary
                         )
+
+                        Spacer(modifier = Modifier.height(12.dp))
+                        TextButton(
+                            onClick = {
+                                val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                                val clip = ClipData.newPlainText("Endereço", uiState.address ?: "")
+                                clipboard.setPrimaryClip(clip)
+                            }
+                        ) {
+                            Text("Copiar endereço")
+                        }
+
                         Spacer(modifier = Modifier.height(6.dp))
                         Text(
                             text = uiState.address ?: "Não disponível",
