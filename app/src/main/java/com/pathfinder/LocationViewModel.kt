@@ -1,4 +1,4 @@
-package com.example.pathfinder
+package com.example.locpathing
 
 import android.annotation.SuppressLint
 import android.app.Application

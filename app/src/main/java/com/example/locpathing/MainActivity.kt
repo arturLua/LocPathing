@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.locpathing.ui.theme.LocPathingTheme
-import com.example.pathfinder.LocationViewModel
-import com.example.pathfinder.LocationUiState
+import com.example.locpathing.LocationViewModel
+import com.example.locpathing.LocationUiState
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
