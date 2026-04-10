@@ -101,8 +101,18 @@ fun LocationScreen(
                 ) {
                     when {
                         uiState.isLoading -> {
-                            CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-                            Text("Obtendo localização...", color = MaterialTheme.colorScheme.onSurface)
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                    CircularProgressIndicator()
+                                    Spacer(modifier = Modifier.height(12.dp))
+                                    Text("Obtendo localização...", color = MaterialTheme.colorScheme.onSurface)
+                                }
+                            }
                         }
 
                         uiState.errorMessage != null -> {
