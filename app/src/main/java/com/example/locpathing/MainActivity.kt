@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.locpathing.ui.theme.LocPathingTheme
 import kotlinx.coroutines.launch
+import com.example.locpathing.ui.theme.PastelRed
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,7 +75,7 @@ fun LocationScreen(
             Icon(
                 imageVector = Icons.Default.LocationOn,
                 contentDescription = "Localização",
-                tint = MaterialTheme.colorScheme.primary,
+                tint = PastelRed,
                 modifier = Modifier.size(64.dp)
             )
 
