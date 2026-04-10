@@ -2,9 +2,6 @@ package com.example.locpathing
 
 import android.annotation.SuppressLint
 import android.app.Application
-import android.location.Address
-import android.location.Geocoder
-import android.os.Build
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
@@ -15,9 +12,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.text.SimpleDateFormat
+import java.util.*
 import kotlin.coroutines.resume
 
-// Estado da UI
 data class LocationUiState(
     val isLoading: Boolean = false,
     val latitude: Double? = null,
@@ -35,22 +33,15 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
     private val fusedLocationClient =
         LocationServices.getFusedLocationProviderClient(application)
 
+    private val geocoderRepository = GeocoderRepository(application)
+
     @SuppressLint("MissingPermission")
     fun fetchLocation() {
         viewModelScope.launch {
             _uiState.value = LocationUiState(isLoading = true)
 
             try {
-                // Obtém localização atual com alta precisão
-                val location = suspendCancellableCoroutine { cont ->
-                    val cts = CancellationTokenSource()
-                    fusedLocationClient
-                        .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cts.token)
-                        .addOnSuccessListener { loc -> cont.resume(loc) }
-                        .addOnFailureListener { cont.resume(null) }
-
-                    cont.invokeOnCancellation { cts.cancel() }
-                }
+                val location = getCurrentLocation()
 
                 if (location == null) {
                     _uiState.value = LocationUiState(
@@ -59,20 +50,16 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
                     return@launch
                 }
 
-                val lat = location.latitude
-                val lng = location.longitude
-
-                // Converte coordenadas em endereço via Geocoder
-                val addressText = reverseGeocode(lat, lng)
-
-                val time = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
-                    .format(java.util.Date())
+                val address = geocoderRepository.getAddressFromLocation(
+                    location.latitude,
+                    location.longitude
+                )
 
                 _uiState.value = LocationUiState(
-                    latitude = lat,
-                    longitude = lng,
-                    address = addressText,
-                    timestamp = time
+                    latitude  = location.latitude,
+                    longitude = location.longitude,
+                    address   = address,
+                    timestamp = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
                 )
 
             } catch (e: Exception) {
@@ -83,44 +70,14 @@ class LocationViewModel(application: Application) : AndroidViewModel(application
         }
     }
 
-    private suspend fun reverseGeocode(lat: Double, lng: Double): String {
-        val geocoder = Geocoder(getApplication())
+    @SuppressLint("MissingPermission")
+    private suspend fun getCurrentLocation() = suspendCancellableCoroutine { cont ->
+        val cts = CancellationTokenSource()
+        fusedLocationClient
+            .getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, cts.token)
+            .addOnSuccessListener { cont.resume(it) }
+            .addOnFailureListener { cont.resume(null) }
 
-        return suspendCancellableCoroutine { cont ->
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                // API 33+: usa callback assíncrono
-                geocoder.getFromLocation(lat, lng, 1, object : Geocoder.GeocodeListener {
-                    override fun onGeocode(addresses: MutableList<Address>) {
-                        cont.resume(formatAddress(addresses))
-                    }
-
-                    override fun onError(errorMessage: String?) {
-                        cont.resume("Endereço não encontrado")
-                    }
-                })
-            } else {
-                // API < 33: chamada síncrona (bloqueia a coroutine, ok pois já está em IO)
-                @Suppress("DEPRECATION")
-                val addresses = geocoder.getFromLocation(lat, lng, 1)
-                cont.resume(formatAddress(addresses ?: emptyList()))
-            }
-        }
-    }
-
-    private fun formatAddress(addresses: List<Address>): String {
-        if (addresses.isEmpty()) return "Endereço não disponível"
-
-        val addr = addresses[0]
-        val parts = mutableListOf<String>()
-
-        addr.thoroughfare?.let { parts.add(it) }           // Rua
-        addr.subThoroughfare?.let { parts.add("nº $it") }  // Número
-        addr.subLocality?.let { parts.add(it) }            // Bairro
-        addr.locality?.let { parts.add(it) }               // Cidade
-        addr.adminArea?.let { parts.add(it) }              // Estado
-        addr.countryName?.let { parts.add(it) }            // País
-        addr.postalCode?.let { parts.add("CEP: $it") }     // CEP
-
-        return parts.joinToString(", ")
+        cont.invokeOnCancellation { cts.cancel() }
     }
 }
