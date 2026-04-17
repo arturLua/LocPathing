@@ -270,7 +270,7 @@ fun LocationScreen(
             LocationFoundOverlay()
         }
 
-        // ── NMEA Bottom Sheet ────────────────────────────────────
+        // NMEA Bottom Sheet
         if (showNmeaSheet) {
             ModalBottomSheet(
                 onDismissRequest = { showNmeaSheet = false },
@@ -485,7 +485,7 @@ fun GnssStatusRow(uiState: LocationUiState, gnssInfo: GnssInfo) {
                 )
             }
 
-            // Precisão — vermelho se mocked, teal se real
+            // Precisão: vermelho se mocked, teal se real
             uiState.accuracy?.let {
                 Text(
                     text = if (uiState.isMocked) "⚠ MOCK" else "ACC  ${"%.1f".format(it)}m",
@@ -529,15 +529,15 @@ fun RadarCanvas(isScanning: Boolean) {
     val infiniteTransition = rememberInfiniteTransition(label = "radar")
 
     // Animações condicionais por modo
-    val rotationDuration    = if (isScanning) 10000 else 12000
-    val rotRevDuration      = if (isScanning) 6000  else 8000
-    val pulseDuration       = if (isScanning) 500   else 1200
-    val pulseTarget         = if (isScanning) 8f    else 7f
-    val textDuration        = if (isScanning) 900   else 1500
-    val majorTickAlpha      = if (isScanning) 0.9f  else 0.8f
-    val arcAlpha            = if (isScanning) 0.55f else 0.5f
-    val cornerAlpha         = if (isScanning) 1.0f  else 0.9f
-    val label               = if (isScanning) "ESCANEANDO..." else "AGUARDANDO SINAL"
+    val rotationDuration = if (isScanning) 10000 else 12000
+    val rotRevDuration = if (isScanning) 6000  else 8000
+    val pulseDuration = if (isScanning) 500   else 1200
+    val pulseTarget = if (isScanning) 8f    else 7f
+    val textDuration = if (isScanning) 900   else 1500
+    val majorTickAlpha = if (isScanning) 0.9f  else 0.8f
+    val arcAlpha = if (isScanning) 0.55f else 0.5f
+    val cornerAlpha = if (isScanning) 1.0f  else 0.9f
+    val label = if (isScanning) "ESCANEANDO..." else "AGUARDANDO SINAL"
 
     val sweepAngle by infiniteTransition.animateFloat(
         initialValue = 0f, targetValue = 360f,
@@ -568,7 +568,7 @@ fun RadarCanvas(isScanning: Boolean) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box(contentAlignment = Alignment.Center, modifier = Modifier.size(200.dp)) {
 
-            // ── Camada 1: anel externo com ticks ─────────────────────────
+            // Camada 1: anel externo com ticks
             Canvas(modifier = Modifier.fillMaxSize().rotate(rotation)) {
                 val cx = size.width / 2; val cy = size.height / 2
                 val rOuter = size.minDimension / 2f
@@ -592,7 +592,7 @@ fun RadarCanvas(isScanning: Boolean) {
                 }
             }
 
-            // ── Camada 2: anel médio com arcos e cantos ───────────────────
+            // Camada 2: anel médio com arcos e cantos
             Canvas(modifier = Modifier.size(148.dp).rotate(rotationReverse)) {
                 val cx = size.width / 2; val cy = size.height / 2
                 val rMid = size.minDimension / 2f
@@ -618,7 +618,7 @@ fun RadarCanvas(isScanning: Boolean) {
                 }
             }
 
-            // ── Camada 3: conteúdo interno — varia por modo ───────────────
+            // Camada 3: conteúdo interno que varia por modo
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val cx = size.width / 2; val cy = size.height / 2
                 val rSweep = size.minDimension / 2f - 4f
@@ -665,7 +665,7 @@ fun RadarCanvas(isScanning: Boolean) {
                     drawCircle(color = AccentRed.copy(alpha = 0.3f), radius = centerPulse * 2.5f, style = Stroke(width = 1f))
                 }
 
-                // Mira — comum aos dois modos
+                // Mira comum aos dois modos
                 drawLine(mira, Offset(cx, cy - gap),      Offset(cx, cy - gap - lineLen),      strokeWidth = 1.5f)
                 drawLine(mira, Offset(cx, cy + gap),      Offset(cx, cy + gap + lineLen),      strokeWidth = 1.5f)
                 drawLine(mira, Offset(cx - gap, cy),      Offset(cx - gap - lineLen, cy),      strokeWidth = 1.5f)
