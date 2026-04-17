@@ -47,28 +47,28 @@ class LocationViewModel(
     private val geocoderRepository: GeocoderRepositoryContract
 ) : AndroidViewModel(application) {
 
-private val _uiState = MutableStateFlow(LocationUiState())
+    private val _uiState = MutableStateFlow(LocationUiState())
 
-private val _gnssInfo = MutableStateFlow(GnssInfo())
+    private val _gnssInfo = MutableStateFlow(GnssInfo())
 
-private val nmeaBuffer = ArrayDeque<String>(80)
-private val _nmeaLog   = MutableStateFlow<List<String>>(emptyList())
-val nmeaLog: StateFlow<List<String>> = _nmeaLog.asStateFlow()
+    private val nmeaBuffer = ArrayDeque<String>(80)
+    private val _nmeaLog   = MutableStateFlow<List<String>>(emptyList())
+    val nmeaLog: StateFlow<List<String>> = _nmeaLog.asStateFlow()
 
-val uiState: StateFlow<LocationUiState> = _uiState.asStateFlow()
-val gnssInfo: StateFlow<GnssInfo> = _gnssInfo.asStateFlow()
+    val uiState: StateFlow<LocationUiState> = _uiState.asStateFlow()
+    val gnssInfo: StateFlow<GnssInfo> = _gnssInfo.asStateFlow()
 
-private val locationManager =
-    application.getSystemService(LocationManager::class.java)
+    private val locationManager =
+        application.getSystemService(LocationManager::class.java)
 
-private val gnssThread = HandlerThread("GnssWorker").also { it.start() }
-private val gnssHandler = Handler(gnssThread.looper)
-private var gnssCallback: GnssStatus.Callback? = null
-private var nmeaListener: OnNmeaMessageListener? = null
+    private val gnssThread = HandlerThread("GnssWorker").also { it.start() }
+    private val gnssHandler = Handler(gnssThread.looper)
+    private var gnssCallback: GnssStatus.Callback? = null
+    private var nmeaListener: OnNmeaMessageListener? = null
 
-private val gnssStarted = AtomicBoolean(false)
+    private val gnssStarted = AtomicBoolean(false)
 
-private val timeFormatter = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+    private val timeFormatter = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
 // Fetch principal
 @SuppressLint("MissingPermission")
