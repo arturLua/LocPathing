@@ -8,16 +8,25 @@
 
 ###
 
-###
-
 <p>
-  LocPathing is a simple Kotlin project that uses a Geocoder API to fetch the user's current location, with options for either precise or approximate results. 
-  The app then displays the location using latitude and longitude coordinates in a straightforward way.
+LocPathing is a technical demonstration of location-based services within the Android ecosystem. Developed in Kotlin, it showcases the integration of the Geocoder API to fetch and render user coordinates. The application features a dynamic precision system, enabling a choice between Fine and Coarse location data, serving as a practical foundation for more complex navigation and mapping projects.
 </p>
 
-###
+<h1>Current Features</h1>
 
-###
+- Customizable Location Precision – Toggle between precise or approximate location modes.
+
+- Reverse Geocoding Support – Automatically converts raw geographic coordinates into human-readable addresses.
+
+- Copy to Clipboard – Easily copy your formatted address with a single tap.
+
+<h1>Roadmap</h1>
+
+- [x] Radar animations
+
+- [ ] Satellite integration and data logging
+
+##
 
 > [!NOTE]
 > - This project is still a work-in-progress
