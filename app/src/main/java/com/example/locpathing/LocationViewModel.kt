@@ -6,6 +6,7 @@ import android.location.*
 import android.os.*
 import androidx.lifecycle.*
 import com.google.android.gms.location.*
+import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.tasks.CancellationTokenSource
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
@@ -66,6 +67,8 @@ class LocationViewModel(
     private var gnssCallback: GnssStatus.Callback? = null
     private var nmeaListener: OnNmeaMessageListener? = null
 
+    private var gnssLocationCallback: LocationCallback? = null
+
     private val gnssStarted = AtomicBoolean(false)
 
     private val timeFormatter = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
@@ -80,6 +83,7 @@ fun fetchLocation() {
 
         if (gnssStarted.compareAndSet(false, true)) {
             startGnssMonitoring()
+            keepGpsAwake()
         }
 
         when (val result = getCurrentLocation()) {
@@ -166,6 +170,24 @@ private fun startGnssMonitoring() {
     locationManager?.addNmeaListener(nmeaListener!!, gnssHandler)
 }
 
+    @SuppressLint("MissingPermission")
+    private fun keepGpsAwake() {
+        val request = LocationRequest.Builder(
+            Priority.PRIORITY_HIGH_ACCURACY, 2000L
+        )
+            .setMinUpdateIntervalMillis(1000L)
+            .setMaxUpdateDelayMillis(3000L)
+            .build()
+
+        gnssLocationCallback = object : LocationCallback() {}
+
+        fusedLocationClient.requestLocationUpdates(
+            request,
+            gnssLocationCallback!!,
+            gnssHandler.looper
+        )
+    }
+
 // Obtenção pontual com resultado tipado
 @SuppressLint("MissingPermission")
 private suspend fun getCurrentLocation(): LocationResult =
@@ -202,6 +224,7 @@ override fun onCleared() {
     super.onCleared()
     gnssCallback?.let { locationManager?.unregisterGnssStatusCallback(it) }
     nmeaListener?.let { locationManager?.removeNmeaListener(it) }
+    gnssLocationCallback?.let { fusedLocationClient.removeLocationUpdates(it) }  // ← adiciona aqui
     gnssThread.quitSafely()
 }
 }
