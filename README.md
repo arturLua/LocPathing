@@ -1,38 +1,73 @@
 <h1 align="center">LocPathing</h1>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Kotlin-7F52FF?style=flat&logo=kotlin&logoColor=ffffff" />
-  <img src="https://img.shields.io/badge/build-in%20progress-FFDE21?style=flat" />
-  <img src="https://img.shields.io/github/last-commit/arturLua/LocPathing?label=updated&style=flat" />  
+<img src="https://img.shields.io/badge/Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white" />
+<img src="https://img.shields.io/badge/Jetpack%20Compose-4285F4?style=for-the-badge&logo=jetpackcompose&logoColor=white" />
+<img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white" />
+<img src="https://img.shields.io/badge/Claude-D97757?style=for-the-badge&logo=claude&logoColor=white" />
 </p>
 
 ###
 
 <p>
-LocPathing is a technical demonstration of location-based services within the Android ecosystem. Developed in Kotlin, it showcases the integration of the Geocoder API to fetch and render user coordinates. The application features a dynamic precision system, enabling a choice between Fine and Coarse location data, serving as a practical foundation for more complex navigation and mapping projects.
+LocPathing is a native Android application that retrieves the device's GPS position and converts raw coordinates into a human-readable address using reverse geocoding. Built entirely in Kotlin with Jetpack Compose, it follows the MVVM architecture pattern and integrates both the Google Fused Location Provider and the Android GNSS stack for real-time satellite monitoring.
 </p>
 
-<h1>Current Features</h1>
+<h1>Features</h1>
 
-- Customizable Location Precision – Toggle between precise or approximate location modes.
+- **Reverse Geocoding** – Converts GPS coordinates into a structured street address (street, number, neighbourhood, city, state, country, postal code).
+  
+- **Real-time GNSS Monitoring** – Tracks the number of satellites in view and in fix, plus average signal strength (C/N₀ in dB-Hz).
 
-- Reverse Geocoding Support – Automatically converts raw geographic coordinates into human-readable addresses.
+- **Mock Location Detection** – Identifies when the device is reporting a spoofed GPS position and flags it visually with a `⚠ MOCK` warning.
 
-- Copy to Clipboard – Easily copy your formatted address with a single tap.
+- **NMEA Debug Log** – A built-in terminal (accessible via the `>_` button) that captures and displays raw NMEA sentences (`GPGGA`, `GPRMC`, `GNGGA`, `GNRMC`) in real time, keeping the last 80 entries.
+  
+- **Radar Animations** – Custom `Canvas`-drawn radar with independent rotating layers, a sweeping line, and a pulsing centre - idle and scanning modes have distinct visual behaviours.
+  
+- **Copy to Clipboard** – Copy the formatted address with a single tap.
+  
+## Architecture
+ 
+The project follows **MVVM** with a clean separation of concerns:
+ 
+```
+MainActivity (Compose UI)
+    └── LocationScreen
+          └── LocationViewModel
+                ├── FusedLocationProviderClient   (one-shot GPS fix)
+                ├── keepGpsAwake()                (keeps GPS chip active)
+                ├── GnssStatus.Callback           (satellite telemetry)
+                ├── OnNmeaMessageListener         (raw NMEA stream)
+                └── GeocoderRepository            (reverse geocoding)
+                      └── GeocoderRepositoryContract (interface / testable)
+```
 
-<h1>Roadmap</h1>
+## Tech Stack
+| Layer | Library / API |
+|---|---|
+| UI | Jetpack Compose + Material 3 |
+| Architecture | ViewModel + StateFlow (MVVM) |
+| Location | Google Play Services - Fused Location Provider |
+| Geocoding | `android.location.Geocoder` (native) |
+| GNSS | `GnssStatus.Callback` + `OnNmeaMessageListener` |
+| Async | Kotlin Coroutines + `suspendCancellableCoroutine` |
 
-- [x] Radar animations
-
-- [ ] Satellite integration and data logging
+## Roadmap
+ 
+- [x] Reverse geocoding
+- [x] Copy address to clipboard
+- [x] Radar animations (idle & scanning modes)
+- [x] Real-time satellite monitoring
+- [x] NMEA debug log
 
 ##
 
 > [!NOTE]
 > - This project is still a work-in-progress
-> - Basic location retrieval is implemented
 > - UI and error handling are currently being improved
 
 <hr>
 
 <p align="center">This project was developed for educational purposes, so it may not provide a fully polished experience.</p>
+<p align="center">Developed in Kotlin · Android · College project</p>
