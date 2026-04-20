@@ -64,10 +64,8 @@ MainActivity (Compose UI)
 ##
 
 > [!NOTE]
-> - This project is still a work-in-progress
-> - UI and error handling are currently being improved
+> - This project was developed for educational purposes, so it may not provide a fully polished experience.
 
 <hr>
 
-<p align="center">This project was developed for educational purposes, so it may not provide a fully polished experience.</p>
 <p align="center">Developed in Kotlin · Android · College project</p>
