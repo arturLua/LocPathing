@@ -45,7 +45,7 @@ class GeocoderRepository(private val context: Context) : GeocoderRepositoryContr
         addr.thoroughfare?.let    { parts.add(it) }
         addr.subThoroughfare?.let { parts.add("nº $it") }
         addr.subLocality?.let     { parts.add(it) }
-        addr.locality?.let        { parts.add(it) }
+        (addr.locality ?: addr.subAdminArea)?.let { parts.add(it) }
         addr.adminArea?.let       { parts.add(it) }
         addr.countryName?.let     { parts.add(it) }
         addr.postalCode?.let      { parts.add("CEP: $it") }
