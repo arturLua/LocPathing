@@ -53,7 +53,7 @@ class LocationViewModel(
     private val _gnssInfo = MutableStateFlow(GnssInfo())
 
     private val nmeaBuffer = ArrayDeque<String>(80)
-    private val _nmeaLog   = MutableStateFlow<List<String>>(emptyList())
+    private val _nmeaLog = MutableStateFlow<List<String>>(emptyList())
     val nmeaLog: StateFlow<List<String>> = _nmeaLog.asStateFlow()
 
     val uiState: StateFlow<LocationUiState> = _uiState.asStateFlow()
@@ -240,9 +240,9 @@ class LocationViewModelFactory(
             "Factory só conhece LocationViewModel"
         }
         return LocationViewModel(
-            application         = application,
+            application = application,
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(application),
-            geocoderRepository  = GeocoderRepository(application)  // <- concreto só aqui
+            geocoderRepository = GeocoderRepository(application)  // <- concreto só aqui
         ) as T
     }
 }

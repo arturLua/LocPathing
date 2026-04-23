@@ -129,24 +129,24 @@ fun LocationScreen(
                         modifier = Modifier.size(28.dp)
                     )
                     Text(
-                        text         = "LocPathing",
-                        fontSize     = 22.sp,
-                        fontWeight   = FontWeight.ExtraBold,
-                        color        = MaterialTheme.colorScheme.onBackground,
+                        text = "LocPathing",
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = MaterialTheme.colorScheme.onBackground,
                         letterSpacing = 1.sp
                     )
                 }
 
                 // Botão debug - aparece discretamente no canto
                 TextButton(
-                    onClick            = { showNmeaSheet = true },
-                    contentPadding     = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
+                    onClick = { showNmeaSheet = true },
+                    contentPadding = PaddingValues(horizontal = 8.dp, vertical = 4.dp)
                 ) {
                     Text(
-                        text          = ">_",
-                        fontSize      = 15.sp,
-                        fontFamily    = FontFamily.Monospace,
-                        color         = TextSecondary.copy(alpha = 0.5f),
+                        text = ">_",
+                        fontSize = 15.sp,
+                        fontFamily = FontFamily.Monospace,
+                        color = TextSecondary.copy(alpha = 0.5f),
                         letterSpacing = 1.sp
                     )
                 }
@@ -457,9 +457,9 @@ fun GnssStatusRow(uiState: LocationUiState, gnssInfo: GnssInfo) {
     val accuracyColor = if (uiState.isMocked) AccentRed else AccentTeal
 
     Row(
-        modifier              = Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment     = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically
     ) {
         // Satélites fixados / visíveis
         Text(
@@ -574,7 +574,7 @@ fun RadarCanvas(isScanning: Boolean) {
                 val rOuter = size.minDimension / 2f
                 drawCircle(color = AccentTeal.copy(alpha = 0.2f), radius = rOuter, style = Stroke(width = 1f))
                 for (i in 0 until 36) {
-                    val angle   = Math.toRadians(i * 10.0)
+                    val angle = Math.toRadians(i * 10.0)
                     val isMajor = i % 9 == 0
                     val tickLen = if (isMajor) 14f else 6f
                     drawLine(
@@ -647,7 +647,7 @@ fun RadarCanvas(isScanning: Boolean) {
                     }
 
                     // Linha do sweep
-                    val sweepRad  = Math.toRadians(sweepAngle.toDouble())
+                    val sweepRad = Math.toRadians(sweepAngle.toDouble())
                     val sweepEndX = cx + rSweep * kotlin.math.cos(sweepRad).toFloat()
                     val sweepEndY = cy + rSweep * kotlin.math.sin(sweepRad).toFloat()
                     drawLine(AccentTeal.copy(alpha = 0.3f),  Offset(cx, cy), Offset(sweepEndX, sweepEndY), strokeWidth = 4f)
